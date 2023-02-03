@@ -1,0 +1,76 @@
+
+body {
+	background-color: #ffd4e4;
+}
+
+#wrapper {
+	margin: 0 auto;
+	/* margin-top: 50%;*/
+}
+
+h1 {
+	text-align: center;
+}
+
+h2 {
+	color: #bd0045;
+	background-color:red; 
+	color: white; 
+	width: 60%; 
+	text-align: 
+	center; 
+	margin: 0 auto;
+}
+
+.graybg {
+	background-color: gray;
+}
+
+.card-box {
+	position: relative;
+	background-color: white;
+	border: 2px dashed #bd0045;
+	border-radius: 5px;
+	padding: 5px 0 5px 0;
+}
+
+.card-box p {
+	line-height: 15px;
+	color: #636363;
+}
+
+.card-box:hover {
+	background-color: #ffedf4;
+}
+
+.num {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	top: -10%;
+	left: 97%;
+	text-weight: bold;
+	font-size: 15pt;
+	border-radius: 5px;
+	background-color: #ff337e;
+	color: white;
+	text-align: center;
+	align-items: center;
+}
+
+.coupon-number {
+	display: flex;
+	align-items: center;
+	font-size: 25pt;
+	font-family: "Comic Sans";
+}
+
+
+@media only screen and (max-width: 400px) {
+
+	.num {
+		top: -10%;
+		left: 92%;
+	}
+
+}
