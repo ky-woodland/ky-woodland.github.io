@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -22,7 +22,7 @@ def __repr__(self):
 
 TEMPLATES_AUTO_RELOAD = True
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def hello():
     coupon_kiss = coupons.query.get(1)
     coupon_movie = coupons.query.get(2)
@@ -34,6 +34,7 @@ def hello():
         for key, value in request.form.items():
             if key == "kiss":
                 coupon_kiss.amount = coupon_kiss.amount - 1;
+                db.session.commit()
 
     return render_template('index.html',
         coupon_kiss=coupon_kiss, 
@@ -41,15 +42,18 @@ def hello():
         coupon_game=coupon_game,
         coupon_break=coupon_break)
 
-
-@app.route("/testing", methods=['GET', 'POST'])
-def testing():
+@app.route('/subtract', methods=['POST'])
+def subtract():
     coupon_kiss = coupons.query.get(1)
     coupon_movie = coupons.query.get(2)
     coupon_game = coupons.query.get(3)
     coupon_break = coupons.query.get(4)
-    return render_template("testing_page.html", 
-        coupon_kiss=coupon_kiss, 
-        coupon_movie=coupon_movie,
-        coupon_game=coupon_game,
-        coupon_break=coupon_break)
+
+    if request.method == 'POST':
+        # Print the form data to the console
+        for key, value in request.form.items():
+            if key == "kiss":
+                coupon_kiss.amount = coupon_kiss.amount - 1;
+
+                db.session.commit()
+                return redirect('/')

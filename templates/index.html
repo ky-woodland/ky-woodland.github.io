@@ -20,7 +20,7 @@
           <h4>Cash in this coupon?</h4>
           <p style="font-size: 8pt">you have ({{ coupon_kiss.amount }}) remaining</p>
           <div style="display: flex; justify-content: space-evenly;">
-          <form action="{{ url_for('hello') }}" method="post">
+          <form action="{{ url_for('subtract') }}" method="post">
             <button type="submit" name="kiss" value="idk" class="popupButton" onClick="submitCoupon()">Yes</button>
           </form>
           <button class="popupButton" onClick="togglePopup()">No</button>
@@ -80,7 +80,7 @@
 
         <div class="corner-ribbon__inner">
         <!-- The ribbon -->
-        <div class="corner-ribbon__ribbon">x<span class="amount-remaining">3</div>
+        <div class="corner-ribbon__ribbon">x<span class="amount-remaining">{{ coupon_kiss.amount }}</div>
     </div>
 
       	<div class="row m-0">
@@ -99,7 +99,7 @@
 
   </div>
 
-  <div id="Movie" onClick="clickCoupon(this.id)" class="row mt-3" style="position: relative">   
+<div id="Movie" onclick="clickCoupon(this.id)" class="row mt-3" style="position: relative">   
 
     <div class="col">
       <div class="card-box">
@@ -107,7 +107,7 @@
 
         <div class="corner-ribbon__inner">
         <!-- The ribbon -->
-        <div class="corner-ribbon__ribbon">x<span class="amount-remaining">3</div>
+        <div class="corner-ribbon__ribbon">x<span class="amount-remaining">{{ coupon_movie.amount }}</div>
     </div>
 
         <div class="row m-0">
@@ -117,7 +117,7 @@
           <div class="col my-auto" style="padding: 5px 0 5px 0;">
             <h3>this coupon is good for:</h3>
             <div class="coupon-title">
-              movie time
+              <h4>{{ coupon_movie.name }}</h4>
             </div>
           </div>
         </div>
