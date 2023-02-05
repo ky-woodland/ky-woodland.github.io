@@ -1,37 +1,41 @@
 
 body {
-	background-color: #ffd4e4;
+	background-color: #ffeded;
 }
 
 #wrapper {
 	margin: 0 auto;
 	/* margin-top: 50%;*/
+	max-width: 600px;
 }
 
 h1 {
 	text-align: center;
 }
 
-h2 {
+h3 {
+	position: relative;
 	color: #bd0045;
-	background-color:red; 
+	background-color: #ff8a8a; 
 	color: white; 
-	width: 60%; 
-	text-align: 
-	center; 
+	width: 80%; 
+	text-align: center; 
 	margin: 0 auto;
-}
-
-.graybg {
-	background-color: gray;
+	margin-bottom: -10px;
+	font-size: 9pt;
+	padding: 5px;
+	font-weight: bold;
+	text-transform: uppercase;
+	z-index: 10;
 }
 
 .card-box {
 	position: relative;
 	background-color: white;
-	border: 2px dashed #bd0045;
+	/* border: 2px dashed #bd0045; */
 	border-radius: 5px;
-	padding: 5px 0 5px 0;
+	background-color: #ffd1d1;
+	overflow: hidden;
 }
 
 .card-box p {
@@ -39,8 +43,26 @@ h2 {
 	color: #636363;
 }
 
+.img-box {
+	display: flex;
+	background-color: #ff8a8a;
+	text-align: center;
+}
+
 .card-box:hover {
 	background-color: #ffedf4;
+}
+
+.coupon-title {
+	background-color: white;
+	width: 90%;
+	height: 70px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.coupon-title h4 {
+	line-height: 70px;
 }
 
 .num {
@@ -66,6 +88,38 @@ h2 {
 }
 
 
+
+.popup {
+	width: 300px;
+	padding: 10px;
+	background-color: white;
+	border: 1px dashed gray;
+	color: black;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	z-index: 20;
+}
+
+.popupButton {
+	background-color: #ff8a8a;
+	border: none;
+	border-radius: 5px;
+	color: white;
+	font-weight: bold;
+}
+
+.popupButton:hover, .popupButton:focus {
+	background-color: #ed3434;
+}
+
+.popupButton:active {
+	background-color: #ffd1d1;
+	color: #ed3434;
+}
+
 @media only screen and (max-width: 400px) {
 
 	.num {
@@ -73,4 +127,44 @@ h2 {
 		left: 92%;
 	}
 
+}
+
+
+
+.corner-ribbon__inner {
+    /* Displayed at the top left corner */
+    right: -10px;
+    position: absolute;
+    bottom: -50px;
+
+    /* Size */
+    height: 8rem;
+    width: 8rem;
+
+    font-size: 10pt;
+    font-weight: bold;
+    color: white;
+
+    /* Hide the part of its children which is displayed outside */
+    overflow: hidden;
+}
+
+.corner-ribbon__ribbon {
+    /* Position */
+    left: 5rem;
+    position: absolute;
+    top: 3rem;
+
+    /* Size */
+    height: 1.5rem;
+    width: 6.656rem;
+
+    /* Displayed diagonally */
+    transform: translate(-38px, -8px) rotate(-45deg);
+
+    /* Background color */
+    background-color: #ed3434;
+
+    /* Centerize the text content */
+    text-align: center;
 }

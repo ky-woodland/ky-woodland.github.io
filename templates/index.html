@@ -5,8 +5,63 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 	<link rel="stylesheet" href="static/stylesheets/styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
+  <meta charset="utf-8">
 
+
+  <script>
+
+    function clickCoupon(clickID) {
+      var item = document.getElementById(clickID);
+      if (item.id === "Kiss") {
+        document.getElementById("popup").innerHTML = `
+          <h1>{{ coupon_kiss.name }}</h1>
+          <p>{{ coupon_kiss.desc }}</p>
+          <img src="{{ coupon_kiss.img }}" style="display: block; margin: 0 auto">
+          <h4>Cash in this coupon?</h4>
+          <p style="font-size: 8pt">you have ({{ coupon_kiss.amount }}) remaining</p>
+          <div style="display: flex; justify-content: space-evenly;">
+          <form action="{{ url_for('hello') }}" method="post">
+            <button type="submit" name="kiss" value="idk" class="popupButton" onClick="submitCoupon()">Yes</button>
+          </form>
+          <button class="popupButton" onClick="togglePopup()">No</button>
+          </div>
+        `;
+      } else if (item.id === "Movie") {
+        document.getElementById("popup").innerHTML = `
+          <h1>movie time</h1>
+          <p>i will drop everything to watch a movie/show (1 ep) of your choice</p>
+          <img src="static/images/top-bunny.png" style="display: block; margin: 0 auto" width="100px">
+          <h4>Cash in this coupon?</h4>
+          <div style="display: flex; justify-content: space-evenly;">
+          <button class="popupButton" onClick="submitCoupon()">Yes</button><button class="popupButton" onClick="togglePopup()">No</button>
+           </div>
+        `;
+      }
+      togglePopup();
+
+    }
+
+    function submitCoupon() {
+
+      // send request to discord bot here
+      // remove 1 coupon from database
+
+
+      togglePopup();
+    }
+
+    function togglePopup() {
+      var popup = document.getElementById("popup");
+      if (popup.style.display === "none") {
+        document.getElementById("popup").style.display = "block";
+      } else {
+        document.getElementById("popup").style.display = "none";
+      }
+    
+    }
+
+  </script>
+</head>
 <body>
 
 <div id="wrapper">
@@ -17,19 +72,54 @@
 <h1>Valentine's Day Coupons</h1>
 <img src="static/images/top-bunny.png" style="display: block; margin: 0 auto" width="100px">
 
-  <div class="row mt-3">   
+  <div id="Kiss" onclick="clickCoupon(this.id)" class="row mt-3" style="position: relative">   
 
     <div class="col">
       <div class="card-box">
-        <div class="num">10</div>
+        <!-- <div class="num">10</div> -->
+
+        <div class="corner-ribbon__inner">
+        <!-- The ribbon -->
+        <div class="corner-ribbon__ribbon">x<span class="amount-remaining">3</div>
+    </div>
+
       	<div class="row m-0">
-	      	<div class="col-3" style="display: flex; align-items: center;">
-	      		<img src="static/images/red_lv1.png" class="img-fluid" style="min-width: 60px">
+	      	<div class="col-3 img-box">
+	      		<img src="static/images/red_lv1.png" class="img-fluid" style="min-width: 60px; align-self: center">
 	      	</div>
-	      	<div class="col my-auto">
-	      		<h2>kiss</h2>
-	      		<p>i will come give a kiss. anytime. any place.</p>
+	      	<div class="col my-auto" style="padding: 5px 0 5px 0;">
+	      		<h3>this coupon is good for:</h3>
+            <div class="coupon-title">
+              <h4>a kiss</h4>
+            </div>
 	      	</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="Movie" onClick="clickCoupon(this.id)" class="row mt-3" style="position: relative">   
+
+    <div class="col">
+      <div class="card-box">
+        <!-- <div class="num">10</div> -->
+
+        <div class="corner-ribbon__inner">
+        <!-- The ribbon -->
+        <div class="corner-ribbon__ribbon">x<span class="amount-remaining">3</div>
+    </div>
+
+        <div class="row m-0">
+          <div class="col-3 img-box">
+            <img src="static/images/red_lv1.png" class="img-fluid" style="min-width: 60px; align-self: center">
+          </div>
+          <div class="col my-auto" style="padding: 5px 0 5px 0;">
+            <h3>this coupon is good for:</h3>
+            <div class="coupon-title">
+              movie time
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -76,7 +166,18 @@
 
 </div>
 
+<div id="popup" class="popup" style="display: none">
+  <!--<h1>a kiss</h1>
+  <p>i will deliver a kiss. anytime. any place.</p>
+  <img src="static/images/top-bunny.png" style="display: block; margin: 0 auto" width="100px">
+  <h4>Cash in this coupon?</h4>
+  <div style="display: flex; justify-content: space-evenly;">
+    <button class="popupButton" onClick="submitCoupon()">Yes</button><button class="popupButton" onClick="togglePopup()">No</button>
+  </div>-->
 </div>
+
+</div>
+
 
 </body>
 </html>
