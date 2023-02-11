@@ -16,7 +16,7 @@
         document.getElementById("popup").innerHTML = `
           <h1>{{ coupon_kiss.name }}</h1>
           <p>{{ coupon_kiss.desc }}</p>
-          <img src="{{ coupon_kiss.img }}" style="display: block; margin: 0 auto">
+          <img  onclick="secretKiss()" src="{{ coupon_kiss.img }}" style="display: block; margin: 0 auto">
           <h4>Cash in this coupon?</h4>
           <p style="font-size: 8pt">you have ({{ coupon_kiss.amount }}) remaining</p>
           <div style="display: flex; justify-content: space-evenly;">
@@ -39,6 +39,22 @@
       }
       togglePopup();
 
+    }
+
+    function secretKiss() {
+      document.getElementById("popup").innerHTML = `
+          <h1>kiss (18+)</h1>
+          <p>i will give extra special kiss //////</p>
+          <img src="{{ coupon_secret.img }}" style="display: block; margin: 0 auto">
+          <h4>Cash in this coupon?</h4>
+          <p style="font-size: 8pt">you only have ({{ coupon_secret.amount }}) of these remaining...use them wisely</p>
+          <div style="display: flex; justify-content: space-evenly;">
+          <form action="{{ url_for('subtract') }}" method="post">
+            <button type="submit" name="secret" value="idk" class="popupButton" onClick="submitCoupon()">Yes</button>
+          </form>
+          <button class="popupButton" onClick="togglePopup()">No</button>
+          </div>
+        `;
     }
 
     function submitCoupon() {
@@ -70,7 +86,7 @@
 <div class="container">
 
 <h1>Valentine's Day Coupons</h1>
-<img src="static/images/top-bunny.png" style="display: block; margin: 0 auto" width="100px">
+<a href="{{ url_for('discordBot') }}"><img src="static/images/top-bunny.png" style="display: block; margin: 0 auto" width="100px"></a>
 
   <div id="Kiss" onclick="clickCoupon(this.id)" class="row mt-3" style="position: relative">   
 

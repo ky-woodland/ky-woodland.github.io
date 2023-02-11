@@ -29,6 +29,10 @@ h3 {
 	z-index: 10;
 }
 
+.popup h4 {
+	font-size: 12pt;
+}
+
 .card-box {
 	position: relative;
 	background-color: white;
