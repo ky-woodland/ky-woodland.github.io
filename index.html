@@ -30,7 +30,6 @@
 <div class="thumbnail">
   <div class="preview"></div>
   <img id="imageguy" src="images\chao_starter_colors.png">
-  <!--<img id="imageguy" src="https://f2.toyhou.se/file/f2-toyhou-se/images/79900677_YvJGL9eLYgEFcf4.png">-->
 </div>
 
 <!-- Makes canvas to work on. -->
@@ -57,6 +56,7 @@
 <script>
 const canvas = document.querySelector('#cs');
 const ctx = canvas.getContext('2d');
+
 
 //my stuff
 
@@ -92,7 +92,6 @@ function getColorType() {
   console.log(colorType);
 }
 
-
 function getColor() {
   const image_array = [
     'blue_chao_palette.jpg',
@@ -114,8 +113,7 @@ function getColor() {
 }
 
 function getYellow() {
-  //document.getElementById('imageguy').src = `./images/starter_accent_color.png`;
-  document.getElementById('imageguy').src = `https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d2d8000c-4236-4a11-a127-320bd4b53121/dh6u9dx-e5ea8dc6-a00f-4b48-a264-abdccae0573c.png/v1/fill/w_1143,h_410,q_80,strp/chao_starter_colors_by_staarbytes_dh6u9dx-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NDEwIiwicGF0aCI6IlwvZlwvZDJkODAwMGMtNDIzNi00YTExLWExMjctMzIwYmQ0YjUzMTIxXC9kaDZ1OWR4LWU1ZWE4ZGM2LWEwMGYtNGI0OC1hMjY0LWFiZGNjYWUwNTczYy5wbmciLCJ3aWR0aCI6Ijw9MTE0MyJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.QaMx6tpyJtx0mpgX9aMwPeIns-6VtY-rhytQ1Y2VAu4`;
+  document.getElementById('imageguy').src = `./images/starter_accent_color.png`;
 }
 
 //Converts uploaded image into base64.
@@ -132,7 +130,6 @@ function encodeImageFileAsURL() {
       var srcData = fileLoadedEvent.target.result; // This is the base64 data.
   		//Setting the image on screen to be the base64 version of the image.    
       const imgg = document.getElementById("imageguy");
-      imgg.crossOrigin = "Anonymous";
     	imgg.src = srcData;
       
     }
@@ -140,11 +137,7 @@ function encodeImageFileAsURL() {
   }
 }
 
-/*var img = _('.thumbnail img'),
-  result = _('.result'),
-  preview = _('.preview'),x = '',y = '';*/
-
-var img = document.getElementById("imageguy"),
+var img = _('.thumbnail img'),
   result = _('.result'),
   preview = _('.preview'),x = '',y = '';
   
@@ -158,23 +151,21 @@ document.getElementById("getColor").addEventListener('click', function(e){
  x = Math.floor(Math.random() * img.width+1);
 	y = Math.floor(Math.random() * img.height+1);
   }
-
   useCanvas(canvas,img,function(){
-    var p = canvas.getContext('2d')
-    .getImageData(x, y, 1, 1).data;
-    result.innerHTML = '<span>HEX: '+rgbToHex(p[0],p[1],p[2])+'</span><br><br>'+
-    '<span>RGB:  rgb('+
-      p[0]+','+
-      p[1]+','+
-      p[2]+')</span>';
-    
-    //document.body.style.background =rgbToHex(p[0],p[1],p[2]);
-    document.getElementById("color-gen").style.background =rgbToHex(p[0],p[1],p[2]);
+  var p = canvas.getContext('2d')
+  .getImageData(x, y, 1, 1).data;
+  result.innerHTML = '<span>HEX: '+rgbToHex(p[0],p[1],p[2])+'</span><br><br>'+
+   '<span>RGB:  rgb('+
+    p[0]+','+
+    p[1]+','+
+    p[2]+')</span>';
+  
+  //document.body.style.background =rgbToHex(p[0],p[1],p[2]);
+  document.getElementById("color-gen").style.background =rgbToHex(p[0],p[1],p[2]);
   });
 },false);
 
 // preview but doesn't work?? idk
-/*
 img.addEventListener('mousemove', function(e){
   if(e.offsetX) {
   x = e.offsetX;
@@ -193,7 +184,7 @@ img.addEventListener('mousemove', function(e){
   preview.style.background = rgbToHex(p[0],p[1],p[2]);
   });
 },false);
-*/
+
 function useCanvas(el,image,callback){
   el.width = image.width;
   el.height = image.height; 
