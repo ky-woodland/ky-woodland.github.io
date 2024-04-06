@@ -1,98 +1,235 @@
-<html>
-	<head>
-	</head>
-	<body>
-				<input type="file" id="filePicker" />
-		<canvas id="mainCanvas" width="400px" height="400px"></canvas>
-		<script>
-			const canvas = document.querySelector('#mainCanvas');
-			const ctx = canvas.getContext('2d');
-			const filePicker = document.querySelector("#filePicker");
+<!DOCTYPE html>
 
-			const colors =  [];
-			const seenColors = {};
+<head>
 
-			let imageData;
+<style>
+#cs{ 
+    display:none;
+}
 
-			filePicker.addEventListener("change", fileInputChanged);
+.result {
+    background-color: white;
+    color: black;
+}
+
+#color-gen {
+    width: 200px;
+    height: 200px;
+}
+    </style>
+
+</head>
+
+<body>
+
+<!-- Input file from computer. -->
+<!-- <input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" /> -->
+<!--<button onclick="encodeImageFileAsURL()">Click me to generate image</button> -->
+
+<!-- Shows image on screen. -->
+<div class="thumbnail">
+  <div class="preview"></div>
+  <img id="imageguy" src="images\chao_starter_colors.png">
+  <!--<img id="imageguy" src="https://f2.toyhou.se/file/f2-toyhou-se/images/79900677_YvJGL9eLYgEFcf4.png">-->
+</div>
+
+<!-- Makes canvas to work on. -->
+<canvas id="cs"></canvas>
+
+<button id="color-type" onclick="getColorType()">Roll for Color Type FIRST</button><br><br>
+<div id="color-type-box">
+  <span>Color Type: </span>
+</div>
+<button onclick="getYellow()">Click to generate Standard Accent Color (Yellow Shades)</button><br>
+<button onclick="getColor()">If Special, Click This</button><br><br>
+<button id="getColor" onclick="encodeImageFileAsURL()">Generate From Current Palette</button>
 
 
-			function fileInputChanged (e) {
-				let input = this;
-				console.log(this.files);
-				console.log(e);
-				console.log(filePicker.value);
-				const fileReader = new FileReader();
-				fileReader.onload = imageLoaded;
-				fileReader.readAsDataURL(this.files[0]);
-			}
+<!-- Displays result. -->
+<div class="result">
+  <span>HEX: </span>
+  <br><br>
+  <span>RGB: </span> 
+</div>
 
-			function imageLoaded(e) {
-				console.log(e);
-				let img = document.createElement("img");
-				img.style = "visibility: hidden";
-				img.src = e.target.result;
-				img.onload = function (evt) {
-					console.log(img.width, img.height);
-					
-					canvas.width = img.width;
-					canvas.height = img.height;
-					ctx.drawImage(img, 0, 0);
-					imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-					processData(imageData);
-				}
-			}
+<div id="color-gen"></div>
 
-			function processData(imageData) {
-				let data = imageData.data;
-				console.log(imageData);
+<script>
+const canvas = document.querySelector('#cs');
+const ctx = canvas.getContext('2d');
 
-				for (let i = 0; i < data.length; i+=4) {
-					let r = data[i];
-					let g = data[i+1];
-					let b = data[i+2];
-					let a = data[i+3];
+//my stuff
 
-					let color = `${r}, ${g}, ${b}, ${a}`;
-					if (seenColors.hasOwnProperty(color)) {
-						seenColors[color].count += 1;
-					} else{
-						seenColors[color] = {count: 1};
-					}
-				}
+// roll to get the color type of the chao
+function getColorType() {
+  var standardChance = 95;
+  var specialChance = 5;
+  var monoChance = 75;
+  var twotoneChance = 25;
+  var colorType;
 
-				const uniqueColors = Object.keys(seenColors).length;
-				console.log(`There were ${uniqueColors} uniqueColors`);
+  var randomNum;
+  var randomNumSpecial;
+  randomNum = Math.floor(Math.random() * (100 - 1 + 1) + 1);
 
-				Object.keys(seenColors).forEach( (k, i) => {
-					colors.push([k, seenColors[k].count]);
-				});
+  if (randomNum < 96) {
+    colorType = "Standard";
+  }
+  else {
+    randomNumSpecial = Math.floor(Math.random() * (100 - 1 + 1) + 1);
+    if (randomNumSpecial < 76) {
+      colorType = "Mono-tone";
+    }
+    else {
+      colorType = "Two-tone";
+    }
+  }
+  document.getElementById("color-type-box").innerHTML = "Color Type: " + colorType;
 
-				 colors.sort( (a, b) => b[1] - a[1]);
-				 console.log(colors);
-				 createColorTable(colors, 20);
+  //getColor(colorType);
+  console.log(randomNum);
+  console.log(randomNumSpecial);
+  console.log(colorType);
+}
 
-			}
 
-			function createColorTable(colorCounts, rowCount) {
-				const table = document.createElement('table');
-				let tr = document.createElement('tr');
-				let th = document.createElement('th')
-				th.innerHTML = 'Color Counts';
-				tr.appendChild(th);
-				table.appendChild(tr);
-				for (let i = 0; i < rowCount; i++) {
-					let tr = document.createElement('tr');
-					let td = document.createElement('td');
-					td.innerHTML = colorCounts[i][1];
-					td.style.backgroundColor = `rgba(${colorCounts[i][0]})`;
-					
-					tr.appendChild(td);
-					table.appendChild(tr);
-				}
-				document.body.appendChild(table);
-			}
-		</script>
+function getColor() {
+  const image_array = [
+    'blue_chao_palette.jpg',
+    'brown_chao_palette.jpg',
+    'gray_chao_palette.jpg',
+    'green_chao_palette.jpg',
+    'lime_chao_palette.jpg',
+    'orange_chao_palette.jpg',
+    'pink_chao_palette.jpg',
+    'purple_chao_palette.jpg',
+    'red_chao_palette.jpg',
+    'sky_blue_chao_palette.jpg',
+    'yellow_chao_palette.jpg',
+  ];
 
-	</body>
+  const random_index = Math.floor(Math.random() * image_array.length);
+  const selected_image = image_array[random_index];
+  document.getElementById('imageguy').src = `./images/${selected_image}`;
+}
+
+function getYellow() {
+  //document.getElementById('imageguy').src = `./images/starter_accent_color.png`;
+  document.getElementById('imageguy').src = `https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/d2d8000c-4236-4a11-a127-320bd4b53121/dh6u9dx-e5ea8dc6-a00f-4b48-a264-abdccae0573c.png/v1/fill/w_1143,h_410,q_80,strp/chao_starter_colors_by_staarbytes_dh6u9dx-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NDEwIiwicGF0aCI6IlwvZlwvZDJkODAwMGMtNDIzNi00YTExLWExMjctMzIwYmQ0YjUzMTIxXC9kaDZ1OWR4LWU1ZWE4ZGM2LWEwMGYtNGI0OC1hMjY0LWFiZGNjYWUwNTczYy5wbmciLCJ3aWR0aCI6Ijw9MTE0MyJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.QaMx6tpyJtx0mpgX9aMwPeIns-6VtY-rhytQ1Y2VAu4`;
+}
+
+//Converts uploaded image into base64.
+
+function encodeImageFileAsURL() {
+
+  //var filesSelected = document.getElementById("inputFileToLoad").files;
+  var filesSelected = document.getElementById("standardChaoPalette").files;
+  if (filesSelected.length > 0) {
+    var fileToLoad = filesSelected[0];
+    var fileReader = new FileReader();
+
+    fileReader.onload = function(fileLoadedEvent) {
+      var srcData = fileLoadedEvent.target.result; // This is the base64 data.
+  		//Setting the image on screen to be the base64 version of the image.    
+      const imgg = document.getElementById("imageguy");
+      imgg.crossOrigin = "Anonymous";
+    	imgg.src = srcData;
+      
+    }
+    fileReader.readAsDataURL(fileToLoad);
+  }
+}
+
+/*var img = _('.thumbnail img'),
+  result = _('.result'),
+  preview = _('.preview'),x = '',y = '';*/
+
+var img = document.getElementById("imageguy"),
+  result = _('.result'),
+  preview = _('.preview'),x = '',y = '';
+  
+ //Randomize between image's X and Y when it is clicked. --set this to be a button instead
+document.getElementById("getColor").addEventListener('click', function(e){
+  if(e.offsetX) {
+ x = Math.floor(Math.random() * img.width+1);
+	y = Math.floor(Math.random() * img.height+1);
+  }
+  else if(e.layerX) {
+ x = Math.floor(Math.random() * img.width+1);
+	y = Math.floor(Math.random() * img.height+1);
+  }
+
+  useCanvas(canvas,img,function(){
+    var p = canvas.getContext('2d')
+    .getImageData(x, y, 1, 1).data;
+    result.innerHTML = '<span>HEX: '+rgbToHex(p[0],p[1],p[2])+'</span><br><br>'+
+    '<span>RGB:  rgb('+
+      p[0]+','+
+      p[1]+','+
+      p[2]+')</span>';
+    
+    //document.body.style.background =rgbToHex(p[0],p[1],p[2]);
+    document.getElementById("color-gen").style.background =rgbToHex(p[0],p[1],p[2]);
+  });
+},false);
+
+// preview but doesn't work?? idk
+/*
+img.addEventListener('mousemove', function(e){
+  if(e.offsetX) {
+  x = e.offsetX;
+  y = e.offsetY; 
+  }
+  else if(e.layerX) {
+  x = e.layerX;
+  y = e.layerY;
+  }
+  
+  useCanvas(canvas,img,function(){
+  
+  var p = canvas.getContext('2d')
+  .getImageData(x, y, 1, 1).data;
+
+  preview.style.background = rgbToHex(p[0],p[1],p[2]);
+  });
+},false);
+*/
+function useCanvas(el,image,callback){
+  el.width = image.width;
+  el.height = image.height; 
+  el.getContext('2d')
+  .drawImage(image, 0, 0, image.width, image.height);
+  return callback();
+}
+
+function _(el){
+  return document.querySelector(el);
+}
+
+function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function findPos(obj) {
+  var curleft = 0, curtop = 0;
+  if (obj.offsetParent) {
+    do {
+      curleft += obj.offsetLeft;
+      curtop += obj.offsetTop;
+    } while (obj = obj.offsetParent);
+    return { x: curleft, y: curtop };
+  }
+  return undefined;
+}
+
+</script>
+
+</body>
+
+
 </html>
