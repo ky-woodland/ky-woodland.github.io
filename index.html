@@ -1,0 +1,98 @@
+<html>
+	<head>
+	</head>
+	<body>
+				<input type="file" id="filePicker" />
+		<canvas id="mainCanvas" width="400px" height="400px"></canvas>
+		<script>
+			const canvas = document.querySelector('#mainCanvas');
+			const ctx = canvas.getContext('2d');
+			const filePicker = document.querySelector("#filePicker");
+
+			const colors =  [];
+			const seenColors = {};
+
+			let imageData;
+
+			filePicker.addEventListener("change", fileInputChanged);
+
+
+			function fileInputChanged (e) {
+				let input = this;
+				console.log(this.files);
+				console.log(e);
+				console.log(filePicker.value);
+				const fileReader = new FileReader();
+				fileReader.onload = imageLoaded;
+				fileReader.readAsDataURL(this.files[0]);
+			}
+
+			function imageLoaded(e) {
+				console.log(e);
+				let img = document.createElement("img");
+				img.style = "visibility: hidden";
+				img.src = e.target.result;
+				img.onload = function (evt) {
+					console.log(img.width, img.height);
+					
+					canvas.width = img.width;
+					canvas.height = img.height;
+					ctx.drawImage(img, 0, 0);
+					imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+					processData(imageData);
+				}
+			}
+
+			function processData(imageData) {
+				let data = imageData.data;
+				console.log(imageData);
+
+				for (let i = 0; i < data.length; i+=4) {
+					let r = data[i];
+					let g = data[i+1];
+					let b = data[i+2];
+					let a = data[i+3];
+
+					let color = `${r}, ${g}, ${b}, ${a}`;
+					if (seenColors.hasOwnProperty(color)) {
+						seenColors[color].count += 1;
+					} else{
+						seenColors[color] = {count: 1};
+					}
+				}
+
+				const uniqueColors = Object.keys(seenColors).length;
+				console.log(`There were ${uniqueColors} uniqueColors`);
+
+				Object.keys(seenColors).forEach( (k, i) => {
+					colors.push([k, seenColors[k].count]);
+				});
+
+				 colors.sort( (a, b) => b[1] - a[1]);
+				 console.log(colors);
+				 createColorTable(colors, 20);
+
+			}
+
+			function createColorTable(colorCounts, rowCount) {
+				const table = document.createElement('table');
+				let tr = document.createElement('tr');
+				let th = document.createElement('th')
+				th.innerHTML = 'Color Counts';
+				tr.appendChild(th);
+				table.appendChild(tr);
+				for (let i = 0; i < rowCount; i++) {
+					let tr = document.createElement('tr');
+					let td = document.createElement('td');
+					td.innerHTML = colorCounts[i][1];
+					td.style.backgroundColor = `rgba(${colorCounts[i][0]})`;
+					
+					tr.appendChild(td);
+					table.appendChild(tr);
+				}
+				document.body.appendChild(table);
+			}
+		</script>
+
+	</body>
+</html>
