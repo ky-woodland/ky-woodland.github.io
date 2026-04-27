@@ -1,39 +1,32 @@
 <!DOCTYPE html>
-
 <head>
-
 <style>
-#cs{ 
-    display:none;
+#cs {
+  display: none;
 }
 
 .result {
-    background-color: white;
-    color: black;
+  background-color: white;
+  color: black;
 }
 
 #color-gen {
-    width: 200px;
-    height: 200px;
+  width: 200px;
+  height: 200px;
 }
-    </style>
-
+</style>
 </head>
 
 <body>
 
-<!-- Input file from computer. -->
-<!-- <input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" /> -->
-<!--<button onclick="encodeImageFileAsURL()">Click me to generate image</button> -->
-
-<!-- Shows image on screen. -->
 <div class="thumbnail">
   <div class="preview"></div>
-  <img id="imageguy" src="https://f2.toyhou.se/file/f2-toyhou-se/images/79900677_YvJGL9eLYgEFcf4.png">
+  <img id="imageguy" src="">
 </div>
 
-<!-- Makes canvas to work on. -->
 <canvas id="cs"></canvas>
+
+<p id="status">Loading image...</p>
 
 <button id="color-type" onclick="getColorType()">Roll for Color Type FIRST</button><br><br>
 <div id="color-type-box">
@@ -41,14 +34,12 @@
 </div>
 <button onclick="getYellow()">Click to generate Standard Accent Color (Yellow Shades)</button><br>
 <button onclick="getColor()">If Special, Click This</button><br><br>
-<button id="getColor" onclick="encodeImageFileAsURL()">Generate From Current Palette</button>
+<button id="getColor" onclick="pickColor()">Generate From Current Palette</button>
 
-
-<!-- Displays result. -->
 <div class="result">
   <span>HEX: </span>
   <br><br>
-  <span>RGB: </span> 
+  <span>RGB: </span>
 </div>
 
 <div id="color-gen"></div>
@@ -56,172 +47,131 @@
 <script>
 const canvas = document.querySelector('#cs');
 const ctx = canvas.getContext('2d');
+const imgEl = document.getElementById('imageguy');
+const statusEl = document.getElementById('status');
+const result = document.querySelector('.result');
+const preview = document.querySelector('.preview');
 
+// All image filenames live in the images/ folder next to this HTML file.
+// Add or remove filenames here as needed.
+const SPECIAL_IMAGES = [
+  'images/chao_color_blue.jpg',
+  'images/chao_color_brown.jpg',
+  'images/chao_color_gray.jpg',
+  'images/chao_color_green.jpg',
+  'images/chao_color_lime.jpg',
+  'images/chao_color_orange.jpg',
+  'images/chao_color_pink.jpg',
+  'images/chao_color_purple.jpg',
+  'images/chao_color_red.jpg',
+  'images/chao_color_skyblue.jpg',
+  'images/chao_color_yellow.jpg',
+];
 
-//my stuff
+const YELLOW_IMAGE = 'images/chao_yellow_accents.jpg';
+const DEFAULT_IMAGE = 'images/chao_starter_colors.png';
 
-// roll to get the color type of the chao
+// Load a local image. Local files don't have CORS issues,
+// but setting crossOrigin = "anonymous" is still good practice
+// in case the page is ever served over HTTP.
+function loadImage(src) {
+  statusEl.textContent = 'Loading image…';
+  const newImg = new Image();
+  newImg.crossOrigin = 'anonymous'; // must be set BEFORE src
+  newImg.onload = function () {
+    imgEl.src = newImg.src;
+    statusEl.textContent = 'Ready!';
+  };
+  newImg.onerror = function () {
+    statusEl.textContent = 'Could not load image: ' + src;
+  };
+  newImg.src = src;
+}
+
+// Roll to get the color type of the chao
 function getColorType() {
-  var standardChance = 95;
-  var specialChance = 5;
-  var monoChance = 75;
-  var twotoneChance = 25;
   var colorType;
-
-  var randomNum;
+  var randomNum = Math.floor(Math.random() * 100) + 1;
   var randomNumSpecial;
-  randomNum = Math.floor(Math.random() * (100 - 1 + 1) + 1);
 
   if (randomNum < 96) {
-    colorType = "Standard";
+    colorType = 'Standard';
+  } else {
+    randomNumSpecial = Math.floor(Math.random() * 100) + 1;
+    colorType = randomNumSpecial < 76 ? 'Mono-tone' : 'Two-tone';
   }
-  else {
-    randomNumSpecial = Math.floor(Math.random() * (100 - 1 + 1) + 1);
-    if (randomNumSpecial < 76) {
-      colorType = "Mono-tone";
-    }
-    else {
-      colorType = "Two-tone";
-    }
-  }
-  document.getElementById("color-type-box").innerHTML = "Color Type: " + colorType;
 
-  //getColor(colorType);
-  console.log(randomNum);
-  console.log(randomNumSpecial);
-  console.log(colorType);
+  document.getElementById('color-type-box').innerHTML = 'Color Type: ' + colorType;
+  console.log(randomNum, randomNumSpecial, colorType);
 }
 
 function getColor() {
-  const image_array = [
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900683_i75Z0b3liGfUo7f.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900678_KkE2nueKwGS9YvT.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900674_aCB8QxxDqK0P6CZ.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900672_3GW2Yb6qDvLlpl9.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900669_CkDcQo3A4iDIUh9.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900666_VE1H1HNjJoUwvYx.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900664_IkKX5QEOr14ZFMX.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900663_AEh0TK8luAzgjlZ.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900662_f7Tcf61EMKHcG8X.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900660_HChc4UPvEmYXNjP.jpg',
-    'https://f2.toyhou.se/file/f2-toyhou-se/images/79900653_mlanHP2mI6p9oQ3.jpg',
-  ];
-
-  const random_index = Math.floor(Math.random() * image_array.length);
-  const selected_image = image_array[random_index];
-  document.getElementById('imageguy').src = `${selected_image}`;
+  const src = SPECIAL_IMAGES[Math.floor(Math.random() * SPECIAL_IMAGES.length)];
+  loadImage(src);
 }
 
 function getYellow() {
-  // document.getElementById('imageguy').src = `./images/starter_accent_color.png`;
-  document.getElementById('imageguy').src = `https://f2.toyhou.se/file/f2-toyhou-se/images/79900659_h24O1Ma2Oq12TyJ.png`;
+  loadImage(YELLOW_IMAGE);
 }
 
-//Converts uploaded image into base64.
+function pickColor() {
+  if (!imgEl.complete || imgEl.naturalWidth === 0) {
+    statusEl.textContent = 'Image not ready yet — please wait!';
+    return;
+  }
 
-function encodeImageFileAsURL() {
+  canvas.width = imgEl.naturalWidth;
+  canvas.height = imgEl.naturalHeight;
+  ctx.drawImage(imgEl, 0, 0);
 
-  //var filesSelected = document.getElementById("inputFileToLoad").files;
-  var filesSelected = document.getElementById("standardChaoPalette").files;
-  if (filesSelected.length > 0) {
-    var fileToLoad = filesSelected[0];
-    var fileReader = new FileReader();
+  const x = Math.floor(Math.random() * canvas.width);
+  const y = Math.floor(Math.random() * canvas.height);
 
-    fileReader.onload = function(fileLoadedEvent) {
-      var srcData = fileLoadedEvent.target.result; // This is the base64 data.
-  		//Setting the image on screen to be the base64 version of the image.    
-      const imgg = document.getElementById("imageguy");
-    	imgg.src = srcData;
-      
-    }
-    fileReader.readAsDataURL(fileToLoad);
+  try {
+    const p = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(p[0], p[1], p[2]);
+    result.innerHTML =
+      '<span>HEX: ' + hex + '</span><br><br>' +
+      '<span>RGB: rgb(' + p[0] + ', ' + p[1] + ', ' + p[2] + ')</span>';
+    document.getElementById('color-gen').style.background = hex;
+    statusEl.textContent = 'Picked from (' + x + ', ' + y + ')';
+  } catch (e) {
+    statusEl.textContent = 'Error reading pixel: ' + e.message;
   }
 }
 
-var img = _('.thumbnail img'),
-  result = _('.result'),
-  preview = _('.preview'),x = '',y = '';
-  
- //Randomize between image's X and Y when it is clicked. --set this to be a button instead
-document.getElementById("getColor").addEventListener('click', function(e){
-  if(e.offsetX) {
- x = Math.floor(Math.random() * img.width+1);
-	y = Math.floor(Math.random() * img.height+1);
-  }
-  else if(e.layerX) {
- x = Math.floor(Math.random() * img.width+1);
-	y = Math.floor(Math.random() * img.height+1);
-  }
-  useCanvas(canvas,img,function(){
-  var p = canvas.getContext('2d')
-  .getImageData(x, y, 1, 1).data;
-  result.innerHTML = '<span>HEX: '+rgbToHex(p[0],p[1],p[2])+'</span><br><br>'+
-   '<span>RGB:  rgb('+
-    p[0]+','+
-    p[1]+','+
-    p[2]+')</span>';
-  
-  //document.body.style.background =rgbToHex(p[0],p[1],p[2]);
-  document.getElementById("color-gen").style.background =rgbToHex(p[0],p[1],p[2]);
-  });
-},false);
+// Mouse preview
+imgEl.addEventListener('mousemove', function (e) {
+  if (!imgEl.complete || imgEl.naturalWidth === 0) return;
 
-// preview but doesn't work?? idk
-img.addEventListener('mousemove', function(e){
-  if(e.offsetX) {
-  x = e.offsetX;
-  y = e.offsetY; 
-  }
-  else if(e.layerX) {
-  x = e.layerX;
-  y = e.layerY;
-  }
-  
-  useCanvas(canvas,img,function(){
-  
-  var p = canvas.getContext('2d')
-  .getImageData(x, y, 1, 1).data;
+  var rect = imgEl.getBoundingClientRect();
+  var scaleX = imgEl.naturalWidth / imgEl.offsetWidth;
+  var scaleY = imgEl.naturalHeight / imgEl.offsetHeight;
+  var x = Math.floor((e.clientX - rect.left) * scaleX);
+  var y = Math.floor((e.clientY - rect.top) * scaleY);
 
-  preview.style.background = rgbToHex(p[0],p[1],p[2]);
-  });
-},false);
+  canvas.width = imgEl.naturalWidth;
+  canvas.height = imgEl.naturalHeight;
+  ctx.drawImage(imgEl, 0, 0);
 
-function useCanvas(el,image,callback){
-  el.width = image.width;
-  el.height = image.height; 
-  el.getContext('2d')
-  .drawImage(image, 0, 0, image.width, image.height);
-  return callback();
-}
-
-function _(el){
-  return document.querySelector(el);
-}
+  try {
+    var p = ctx.getImageData(x, y, 1, 1).data;
+    preview.style.background = rgbToHex(p[0], p[1], p[2]);
+  } catch (e) {}
+});
 
 function componentToHex(c) {
   var hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
+  return hex.length == 1 ? '0' + hex : hex;
 }
 
 function rgbToHex(r, g, b) {
-  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
-function findPos(obj) {
-  var curleft = 0, curtop = 0;
-  if (obj.offsetParent) {
-    do {
-      curleft += obj.offsetLeft;
-      curtop += obj.offsetTop;
-    } while (obj = obj.offsetParent);
-    return { x: curleft, y: curtop };
-  }
-  return undefined;
-}
-
+// Load default image on page load
+loadImage(DEFAULT_IMAGE);
 </script>
 
 </body>
-
-
 </html>
